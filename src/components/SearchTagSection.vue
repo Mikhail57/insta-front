@@ -52,6 +52,8 @@ export default {
       points: [],
       isLoading: false,
       error: null,
+      // backendBaseUrl: 'http://localhost:8000/',
+      backendBaseUrl: '/api',
     };
   },
   computed: {
@@ -65,7 +67,7 @@ export default {
       event.preventDefault();
       this.isLoading = true;
       this.error = null;
-      this.$http.get(`/api/tag/${this.trimmedTag}`)
+      this.$http.get(`${this.backendBaseUrl}/tag/${this.trimmedTag}`)
         .then((response) => {
           this.points = response.body;
           this.isLoading = false;
@@ -83,7 +85,11 @@ export default {
       if (post.image_versions2) {
         result = `<img src='${post.image_versions2.candidates[1].url}'>`;
       }
-      return `${result}<br>${post.caption.text}`;
+      try {
+        return `${result}<br>${post.caption.text}`;
+      } catch (e) {
+        return 'Информация недоступна....';
+      }
     },
     genFooter(post) {
       return `<a href="//instagram.com/p/${post.code}" target="_blank">Пост</a>`;
